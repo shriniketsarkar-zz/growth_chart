@@ -3,43 +3,43 @@ window.GC = window.GC || {};
 GC.get_data = function() {
   var dfd = $.Deferred();
 
-  FHIR.oauth2.ready(onReady, onError);
+  //FHIR.oauth2.ready(onReady, onError);
 
-  function onError(){
-    console.log("Loading error", arguments);
-    dfd.reject({
-      responseText: "Loading error. See console for details."
-    });
-  };
+  //function onError(){
+  //  console.log("Loading error", arguments);
+  //  dfd.reject({
+  //    responseText: "Loading error. See console for details."
+  //  });
+  //};
 
-  function onErrorWithWarning(msg){
-    console.log("Loading error", arguments);
-    dfd.reject({
-      responseText: msg,
-      showMessage: true,
-      messageType: 'warning',
-    })
-  };
+  //function onErrorWithWarning(msg){
+  //  console.log("Loading error", arguments);
+  //  dfd.reject({
+  //    responseText: msg,
+  //    showMessage: true,
+  //    messageType: 'warning',
+  //  })
+  //};
 
-  function onReady(smart){
+  //function onReady(smart){
 
-    var hidePatientHeader = (smart.tokenResponse.need_patient_banner === false);
+    var hidePatientHeader = false;//(smart.tokenResponse.need_patient_banner === false);
     GC.Preferences.prop("hidePatientHeader", hidePatientHeader);
 
-    function defaultOnFail(promise, defaultValue) {
-      var deferred = $.Deferred();
-      $.when(promise).then(
-          function (data) {
-            deferred.resolve(data);
-          },
-          function () {
-            deferred.resolve(defaultValue);
-          }
-      );
-      return deferred.promise();
-    };
+    //function defaultOnFail(promise, defaultValue) {
+    //  var deferred = $.Deferred();
+    //  $.when(promise).then(
+    //      function (data) {
+    //        deferred.resolve(data);
+    //      },
+    //      function () {
+    //        deferred.resolve(defaultValue);
+    //      }
+    //  );
+    //  return deferred.promise();
+    //};
 
-    if (smart.hasOwnProperty('patient')) {
+    //if (smart.hasOwnProperty('patient')) {
       //var ptFetch = smart.patient.read();
       //var vitalsFetch = smart.patient.api.fetchAll({type: "Observation", query: {code: {$or: ['http://loinc.org|3141-9',
       //  'http://loinc.org|8302-2', 'http://loinc.org|8287-5',
@@ -50,14 +50,14 @@ GC.get_data = function() {
       //  onErrorWithWarning(GC.str('STR_Error_LoadingApplication'));
       //});
 
-      var familyHistoryFetch = defaultOnFail(smart.patient.api.fetchAll({type: "FamilyMemberHistory"}), []);
+      //var familyHistoryFetch = defaultOnFail(smart.patient.api.fetchAll({type: "FamilyMemberHistory"}), []);
 
-      $.when(familyHistoryFetch).done(onData);
-    } else {
-      onErrorWithWarning(GC.str('STR_Error_LoadingApplication'));
-    }
+      //$.when(familyHistoryFetch).done(onData);
+    //} else {
+    //  onErrorWithWarning(GC.str('STR_Error_LoadingApplication'));
+    //}
 
-    function onData(familyHistories){
+    //function onData(familyHistories){
       // check patient gender
       //if (!isKnownGender(patient.gender)) onErrorWithWarning(GC.str('STR_Error_UnknownGender'));
 
@@ -174,26 +174,26 @@ GC.get_data = function() {
       //  return -1 * new XDate(d).diffMonths(new XDate(p.demographics.birthday));
       //}
 
-      $.each(familyHistories, function(index, fh){
-        if (fh.resourceType === "FamilyMemberHistory") {
-              var code = fh.relationship.coding[0].code;
-              $.each(fh.extension || [], function(index, ext){
-                if (ext.url === "http://fhir-registry.smarthealthit.org/StructureDefinition/family-history#height") {
-                  var ht = units.cm(ext.valueQuantity);
-                  var r = null;
-                  if (code === 'FTH') {
-                    r = p.familyHistory.father;
-                  } else if (code === 'MTH') {
-                    r = p.familyHistory.mother;
-                  }
-                  if (r) {
-                    r.height = ht;
-                    r.isBio = true;
-                  }
-                }
-              });
-        }
-      });
+      //$.each(familyHistories, function(index, fh){
+      //  if (fh.resourceType === "FamilyMemberHistory") {
+      //        var code = fh.relationship.coding[0].code;
+      //        $.each(fh.extension || [], function(index, ext){
+      //          if (ext.url === "http://fhir-registry.smarthealthit.org/StructureDefinition/family-history#height") {
+      //            var ht = units.cm(ext.valueQuantity);
+      //            var r = null;
+      //            if (code === 'FTH') {
+      //              r = p.familyHistory.father;
+      //            } else if (code === 'MTH') {
+      //              r = p.familyHistory.mother;
+      //            }
+      //            if (r) {
+      //              r.height = ht;
+      //              r.isBio = true;
+      //            }
+      //          }
+      //        });
+      //  }
+      //});
 
       pMock = {};
       pMock.boneAge = [];
@@ -471,8 +471,8 @@ GC.get_data = function() {
       window.data = p;
       console.log("Check out the patient's growth data: window.data");
       dfd.resolve(p);
-    }
-  }
+    //}
+  //}
 
   return dfd.promise();
 };
